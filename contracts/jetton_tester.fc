@@ -85,6 +85,8 @@
 		cell custom_payload = ds~load_ref();
 		int forward_ton_amount = ds~load_coins();
 		cell forward_payload = ds~load_ref();
+		;; WHY ITS NOT WORKING??? CSKIP_NO_STATE
+		;; HOW TO SEND A STATE? WTF?
 		send_recieve(query_id, amount, to, from, jetton_wallet_code, jetton_content); 
 	}
 
