@@ -1,0 +1,23 @@
+forall X -> tuple change_tuple(tuple t, int pos, X value) asm(t value pos) "SETINDEXVAR";
+tuple get_c7() asm "c7 PUSHCTR";
+
+slice vm::invoke_get_addr(slice owner_address, tuple c7, cell master_data, cell master_code) asm
+  "CTOS            // owner_addr c7 md mc"
+  "2 PUSHINT       // owner_addr c7 md mc args"
+  "103289 PUSHINT  // owner_addr c7 md mc args get_jwa_method_id"
+  "5 0 REVERSE DUMPSTK    // owner_addr get_jwa_method_id args mc md c7"
+  "53 RUNVM DUMPSTK       // address exit_code c4' c5'"
+  "3 BLKDROP       // address";
+
+slice get_addr(slice owner_address, cell code, cell data, slice master_addr) inline_ref {
+    tuple c7 = get_c7();
+    c7 = c7.change_tuple(0,
+        c7.at(0).change_tuple(8, master_addr)
+                .change_tuple(10, code)
+    );
+    return vm::invoke_get_addr(owner_address, c7, data, code);
+}
+
+slice calc_my_jetton_wallet(slice master_addr, cell code, cell data) inline {
+    return get_addr(my_address(), code, data, master_addr);
+}

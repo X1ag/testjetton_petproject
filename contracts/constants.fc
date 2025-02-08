@@ -1,0 +1,14 @@
+const int workchain = 0;
+const JETTON_MINTER_ADDR = "kQAU3zc1jrbBY87hH4cUvbeSXISewJahY8lsHt2kITGMUBRU";
+const int op::transfer = 0xf8a7ea5;
+const int op::internal_transfer = 0x178d4519;
+const int ONE_TON = 1000000000;
+
+int is_resolvable?(slice addr) inline {
+    (int wc, _) = parse_std_addr(addr);
+    return wc == workchain;
+}
+
+() force_chain(slice addr) impure {
+  throw_unless(333, is_resolvable?(addr));
+}
