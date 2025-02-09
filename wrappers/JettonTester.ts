@@ -10,6 +10,7 @@ export type JettonTesterConfig = {
 
 export function jettonTesterConfigToCell(config: JettonTesterConfig): Cell {
     return beginCell()
+                 .storeCoins(0)
                  .storeRef(config.jwc)
                  .storeRef(config.jmc)
                  .storeRef(config.data)
@@ -37,25 +38,34 @@ export class JettonTester implements Contract {
         });
     }
 
-    async sendJettons(provider: ContractProvider, via: Sender, query_id: bigint, value: bigint, to: Address, from: Address, amount: bigint) {
+    async sendJettons(provider: ContractProvider, via: Sender, value: bigint, to: Address, from: Address, amount: bigint) {
         await provider.internal(via, {
             value: value,
             sendMode: SendMode.PAY_GAS_SEPARATELY,
-            body: beginCell()
-                    .storeUint(0x1234ff,32)
-                    .storeUint(query_id,64)
-                    .storeRef(JettonWallet.transferMessage(amount, // jetton amount
-                                                            to, 
-                                                            from, // response address
-                                                            beginCell().endCell(), // custom payload
-                                                            toNano('0.05'), // forward ton amount
-                                                            beginCell().endCell())) // forward payload
-                .endCell(),
+            body: JettonWallet.transferMessage(amount, // jetton amount
+                                                to, 
+                                                from, // response address
+                                                beginCell().endCell(), // custom payload
+                                                toNano('0.05'), // forward ton amount
+                                                beginCell().endCell()) // forward payload
         });
-    } 
+    }
+
+    async sendJettonsToUser(provider: ContractProvider, via: Sender, value: bigint, to: Address, amount: bigint) {
+       await provider.internal(via, {
+           value: value,
+           sendMode: SendMode.PAY_GAS_SEPARATELY,
+           body: beginCell().storeUint(0x2ff2, 32).storeUint(0, 64).storeCoins(amount).storeAddress(to).endCell()
+    })
+}
 
     async getWalletAddress(provider: ContractProvider, owner: Address) {
         const res = await provider.get('get_address', [{type:"slice", cell: beginCell().storeAddress(owner).endCell()}])
         return res.stack.readAddress()
+    }
+
+    async getBalance(provider: ContractProvider) {
+        const res = await provider.get('get_contract_balance', [])
+        return res.stack.readBigNumber()
     }
 }
