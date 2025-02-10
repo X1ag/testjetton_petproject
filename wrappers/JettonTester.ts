@@ -55,7 +55,7 @@ export class JettonTester implements Contract {
        await provider.internal(via, {
            value: value,
            sendMode: SendMode.PAY_GAS_SEPARATELY,
-           body: beginCell().storeUint(0x2ff2, 32).storeUint(0, 64).storeCoins(amount).storeAddress(to).endCell()
+           body: beginCell().storeUint(0x2ff2, 32).storeUint(123, 64).storeCoins(amount).storeAddress(to).endCell()
     })
 }
 

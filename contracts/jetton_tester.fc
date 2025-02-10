@@ -18,18 +18,18 @@
 									.store_uint(op::transfer, 32)
 									.store_uint(query_id,64)
 									.store_coins(amount)
-									.store_slice(my_address())
 									.store_slice(to)
-									.store_ref(begin_cell().end_cell())
+									.store_slice(my_address())
+									.store_uint(0, 1)
 									.store_coins(((ONE_TON * 2) / 100))
-									.store_ref(begin_cell().end_cell())
+									.store_uint(0, 1)
 								.end_cell();
 
 	var msg = begin_cell()
 						.store_uint(0x10, 6)
-						.store_slice(calc_user_wallet(to, JETTON_MINTER_ADDR, code))
+						.store_slice(calc_user_wallet(my_address(), JETTON_MINTER_ADDR, code))
 						.store_coins(((ONE_TON * 5) / 100))
-						.store_statinit_ref_and_body_ref(calculate_jetton_wallet_state_init(to, JETTON_MINTER_ADDR,code),msg_body)
+						.store_statinit_ref_and_body_ref(calculate_jetton_wallet_state_init(my_address(), JETTON_MINTER_ADDR,code),msg_body)
 	.end_cell();
 
 	send_raw_message(msg, 0);
@@ -60,7 +60,7 @@
 		throw_if(error::not_enough_jettons, balance < amount);
 		slice to_address = in_msg_body~load_msg_addr();
 		save_data(balance - amount,jetton_wallet_code,jetton_minter_code,jetton_content);
-		send_transfer(query_id,amount,to_address,jetton_minter_code,jetton_content); ;; HERE ERROR I GUESS FIX IT TOMORROW, CONTRACT WAS DEPLOYED
+		send_transfer(query_id,amount,to_address,jetton_minter_code,jetton_content);  
 	} 
 }
 
