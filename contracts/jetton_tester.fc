@@ -13,23 +13,23 @@
 	);
 }
 
-() send_transfer(int query_id, int amount, slice to, cell code, cell data) impure {
+() send_transfer(int query_id, int amount, slice to, cell jetton_wallet_code, cell data) impure {
 	var msg_body = begin_cell()
 									.store_uint(op::transfer, 32)
 									.store_uint(query_id,64)
-									.store_coins(amount)
-									.store_slice(to)
-									.store_slice(my_address())
-									.store_uint(0, 1)
-									.store_coins(((ONE_TON * 2) / 100))
-									.store_uint(0, 1)
+									.store_coins(amount) ;; jetton amount
+									.store_slice(to) ;; destination
+									.store_slice(my_address()) ;; response destination
+									.store_uint(0, 1) ;; custom_payload
+									.store_coins(((ONE_TON * 2) / 100)) ;; forward ton amount
+									.store_uint(0, 1) ;; forward payload
 								.end_cell();
-
+	cell state_init = calculate_jetton_wallet_state_init(my_address(),JETTON_MINTER_ADDR, jetton_wallet_code);
 	var msg = begin_cell()
 						.store_uint(0x10, 6)
-						.store_slice(calc_user_wallet(my_address(), JETTON_MINTER_ADDR, code))
+						.store_slice(calc_user_wallet(my_address(), JETTON_MINTER_ADDR, jetton_wallet_code)) ;; WHY THIS FUNC CALC ADDRESS WRONG? WTF I HAVE NO GUESSES
 						.store_coins(((ONE_TON * 5) / 100))
-						.store_statinit_ref_and_body_ref(calculate_jetton_wallet_state_init(my_address(), JETTON_MINTER_ADDR,code),msg_body)
+						.store_statinit_ref_and_body_ref(state_init, msg_body)
 	.end_cell();
 
 	send_raw_message(msg, 0);
@@ -53,20 +53,21 @@
 	if (op == op::transfer_notification) {
 		int amount = in_msg_body~load_coins();
 		save_data(balance + amount, jetton_wallet_code, jetton_minter_code, jetton_content);
+		return ();
 	}
 
 	if (op == 0x2ff2) { ;; send
 		int amount = in_msg_body~load_coins();
 		throw_if(error::not_enough_jettons, balance < amount);
-		slice to_address = in_msg_body~load_msg_addr();
 		save_data(balance - amount,jetton_wallet_code,jetton_minter_code,jetton_content);
-		send_transfer(query_id,amount,to_address,jetton_minter_code,jetton_content);  
+		send_transfer(query_id,amount,to_address,jetton_wallet_code, jetton_content);  
+		return ();
 	} 
 }
 
 (slice) get_address(slice owner) method_id {
 	var (balance, jetton_wallet_code, jetton_minter_code, jetton_content) = load_data();
-	return calc_user_wallet(owner, JETTON_MINTER_ADDR, jetton_minter_code);
+	return calc_user_wallet(owner, JETTON_MINTER_ADDR, jetton_wallet_code);
 }
 
 (int) get_contract_balance() method_id {

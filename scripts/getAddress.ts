@@ -17,7 +17,7 @@ export async function run(provider: NetworkProvider) {
 
 		const result = await jettonTester.getWalletAddress(jettonTester.address);
 
-		console.log('wallet address: ', result);
+		console.log('wallet address:', result);
 
 
 		// run methods on `jettonTester`

@@ -15,7 +15,7 @@ export async function run(provider: NetworkProvider) {
 		
 		const jettonTester = provider.open(JettonTester.createFromConfig({jmc:jmc, jwc:jwc, data:data}, await compile('JettonTester')));
 
-		await jettonTester.sendJettonsToUser(provider.sender(), toNano('0.1'), provider.sender().address!, toNano(2));
+		await jettonTester.sendJettonsToUser(provider.sender(), toNano('0.1'), toNano(2));
 
 		console.log('tx was sent')
 }
