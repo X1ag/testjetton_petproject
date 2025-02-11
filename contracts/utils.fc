@@ -47,3 +47,22 @@ slice calc_address(cell state_init) inline {
                 .store_ref(jetton_content)
             .end_cell());
 }
+slice calc_minter_address(cell state_init) {
+    return begin_cell().store_uint(4,3)
+    .store_int(workchain, 8)
+    .store_uint(
+                    cell_hash(state_init), 256)
+            .end_cell()
+            .begin_parse();
+}
+cell calculate_jetton_minter_state_init (cell data, cell code) inline {
+    return begin_cell()
+            .store_uint(0,1 + 1) ;; split_depth (Maybe = 0) and special (Maybe = 0)
+            .store_maybe_ref(code)
+            .store_maybe_ref(data)
+            .store_uint(0,1) ;; libraries - empty cell
+            .end_cell();
+}
+(slice) calc_jetton_minter_wallet(cell code, cell data){
+    return calc_minter_address(calculate_jetton_minter_state_init(data,code));
+}

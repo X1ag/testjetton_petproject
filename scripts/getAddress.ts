@@ -1,4 +1,4 @@
-import { address, toNano } from '@ton/core';
+import { address, Slice, toNano } from '@ton/core';
 import { JettonTester } from '../wrappers/JettonTester';
 import { compile, NetworkProvider } from '@ton/blueprint';
 import { jettonContentToCell, jettonMinterConfigToCell } from '../wrappers/JettonMinter'
@@ -14,8 +14,8 @@ export async function run(provider: NetworkProvider) {
 				});
 		
 		const jettonTester = provider.open(JettonTester.createFromConfig({jmc:jmc, jwc:jwc, data:data}, await compile('JettonTester')));
-
-		const result = await jettonTester.getWalletAddress(jettonTester.address);
+		const addr = address("0QCCUre08Opa3u2OkALTHcb0dboE-FUnkyoOqJVTO1h5HJkP")
+		const result = await jettonTester.getWalletAddress(addr);
 
 		console.log('wallet address:', result);
 

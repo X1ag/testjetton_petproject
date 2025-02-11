@@ -18,6 +18,6 @@ slice get_addr(slice owner_address, cell code, cell data, slice master_addr) inl
     return vm::invoke_get_addr(owner_address, c7, data, code);
 }
 
-slice calc_my_jetton_wallet(slice master_addr, cell code, cell data) inline {
-    return get_addr(my_address(), code, data, master_addr);
+slice calc_jetton_wallet_by_vm(slice owner, slice master_addr, cell code, cell data) inline {
+    return get_addr(owner, code, data, master_addr);
 }

@@ -1,4 +1,4 @@
-import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode, toNano } from '@ton/core';
+import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode, Slice, toNano } from '@ton/core';
 
 import { JettonWallet } from './JettonWallet';
 
@@ -59,8 +59,8 @@ export class JettonTester implements Contract {
     })
 }
 
-    async getWalletAddress(provider: ContractProvider, owner: Address) {
-        const res = await provider.get('get_address', [{type:"slice", cell: beginCell().storeAddress(owner).endCell()}])
+    async getWalletAddress(provider: ContractProvider, owner:Address) {
+        const res = await provider.get('get_wallet_jetton_sc_address', [{type:"slice", cell: beginCell().storeAddress(owner).endCell()}])
         return res.stack.readAddress()
     }
 
