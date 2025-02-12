@@ -5,7 +5,8 @@ import { JettonWallet } from './JettonWallet';
 export type JettonTesterConfig = {
     jwc: Cell,
     jmc: Cell,
-    data: Cell
+    data: Cell,
+    jetton_minter_address: Address
 };
 
 export function jettonTesterConfigToCell(config: JettonTesterConfig): Cell {
@@ -14,6 +15,7 @@ export function jettonTesterConfigToCell(config: JettonTesterConfig): Cell {
                  .storeRef(config.jwc)
                  .storeRef(config.jmc)
                  .storeRef(config.data)
+                 .storeAddress(config.jetton_minter_address)
          .endCell();
 }
 
