@@ -9,7 +9,7 @@
 		ds~load_coins(), ;; balance
 		ds~load_ref(), ;; code jetton_wallet
 		ds~load_ref(), ;; code jetton_minter 
-		ds~load_ref() ;; content
+		ds~load_ref() ;; minter_data
 	);
 }
 
@@ -67,9 +67,9 @@
 
 (slice) get_wallet_jetton_sc_address(slice owner) method_id {
 	var (balance, jetton_wallet_code, jetton_minter_code, jetton_content) = load_data();
-	return calc_user_wallet(owner, calc_jetton_minter_wallet(jetton_minter_code, jetton_content), jetton_minter_code);
+	return calc_user_wallet(owner, calc_jetton_minter_wallet(jetton_minter_code, jetton_content), jetton_wallet_code);
 }
-
+;; TODO: ADD GET_MINTER_WALLET GET METHOD!!
 (int) get_contract_balance() method_id {
 	var (balance, jetton_wallet_code, jetton_minter_code, jetton_content) = load_data();
 	return balance; 
