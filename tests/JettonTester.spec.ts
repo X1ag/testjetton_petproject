@@ -30,8 +30,8 @@ describe('JettonTester', () => {
     beforeEach(async () => {
         blockchain = await Blockchain.create();
 
-        jettonTester = blockchain.openContract(JettonTester.createFromConfig({jmc: jetton_minter_code, jwc: jetton_wallet_code, data: jetton_content}, code));
-
+        const jetton_minter_address = address("kQAU3zc1jrbBY87hH4cUvbeSXISewJahY8lsHt2kITGMUBRU")
+	    const jettonTester = blockchain.openContract(JettonTester.createFromConfig({jmc:jetton_minter_code, jwc:jetton_wallet_code, data:jetton_content, jetton_minter_address:jetton_minter_address}, await compile('JettonTester')));
         deployer = await blockchain.treasury('deployer');
         notDeployer = await blockchain.treasury('notDeployer');
 

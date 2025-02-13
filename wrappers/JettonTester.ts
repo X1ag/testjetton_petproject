@@ -1,10 +1,10 @@
-import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode, Slice, toNano } from '@ton/core';
+import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode, toNano } from '@ton/core';
 
 import { JettonWallet } from './JettonWallet';
 
 export type JettonTesterConfig = {
-    jwc: Cell,
-    jmc: Cell,
+    jetton_wallet_code: Cell 
+    jetton_minter_code: Cell,
     data: Cell,
     jetton_minter_address: Address
 };
@@ -12,10 +12,10 @@ export type JettonTesterConfig = {
 export function jettonTesterConfigToCell(config: JettonTesterConfig): Cell {
     return beginCell()
                  .storeCoins(0)
-                 .storeRef(config.jwc)
-                 .storeRef(config.jmc)
+                 .storeRef(config.jetton_minter_code)
                  .storeRef(config.data)
                  .storeAddress(config.jetton_minter_address)
+                 .storeRef(config.jetton_wallet_code)
          .endCell();
 }
 
@@ -37,19 +37,6 @@ export class JettonTester implements Contract {
             value,
             sendMode: SendMode.PAY_GAS_SEPARATELY,
             body: beginCell().endCell(),
-        });
-    }
-
-    async sendJettons(provider: ContractProvider, via: Sender, value: bigint, to: Address, from: Address, amount: bigint) {
-        await provider.internal(via, {
-            value: value,
-            sendMode: SendMode.PAY_GAS_SEPARATELY,
-            body: JettonWallet.transferMessage(amount, // jetton amount
-                                                to, 
-                                                from, // response address
-                                                beginCell().endCell(), // custom payload
-                                                toNano('0.05'), // forward ton amount
-                                                beginCell().endCell()) // forward payload
         });
     }
 

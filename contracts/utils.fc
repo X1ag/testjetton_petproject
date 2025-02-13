@@ -39,13 +39,13 @@ slice calc_address(cell state_init) inline {
     return calc_address(calculate_jetton_wallet_state_init(owner, jetton_master, code));
 }
 
-() save_data(slice jetton_minter_address, int balance, cell jetton_wallet_code, cell jetton_minter_code, cell jetton_content) impure {
+() save_data(int balance,  cell jetton_minter_code, cell jetton_content, slice jetton_minter_address, cell jetton_wallet_code) impure {
     set_data(begin_cell()
-                .store_slice(jetton_minter_address)
                 .store_coins(balance)
-                .store_ref(jetton_wallet_code)
                 .store_ref(jetton_minter_code)
                 .store_ref(jetton_content)
+                .store_slice(jetton_minter_address)
+                .store_ref(jetton_wallet_code)
             .end_cell());
 }
 slice calc_minter_address(cell state_init) {
