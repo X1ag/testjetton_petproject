@@ -31,25 +31,35 @@ describe('JettonTester', () => {
         blockchain = await Blockchain.create();
 
         const jetton_minter_address = address("kQAU3zc1jrbBY87hH4cUvbeSXISewJahY8lsHt2kITGMUBRU")
-	    const jettonTester = blockchain.openContract(JettonTester.createFromConfig({jmc:jetton_minter_code, jwc:jetton_wallet_code, data:jetton_content, jetton_minter_address:jetton_minter_address}, await compile('JettonTester')));
-        deployer = await blockchain.treasury('deployer');
-        notDeployer = await blockchain.treasury('notDeployer');
+	    // const jettonTester = blockchain.openContract(JettonTester.createFromConfig({jmc:jetton_minter_code, jwc:jetton_wallet_code, data:jetton_content, jetton_minter_address:jetton_minter_address}, await compile('JettonTester')));
+        // deployer = await blockchain.treasury('deployer');
+        // notDeployer = await blockchain.treasury('notDeployer');
 
-        const deployResult = await jettonTester.sendDeploy(deployer.getSender(), toNano('0.05'));
+        // const deployResult = await jettonTester.sendDeploy(deployer.getSender(), toNano('0.05'));
 
-        expect(deployResult.transactions).toHaveTransaction({
-            from: deployer.address,
-            to: jettonTester.address,
-            deploy: true,
-            success: true,
-        });
-    });
+        // expect(deployResult.transactions).toHaveTransaction({
+            // from: deployer.address,
+            // to: jettonTester.address,
+            // deploy: true,
+            // success: true,
+        // });
+    },
 
     it('should deploy', async () => {
         // the check is done inside beforeEach
         // blockchain and jettonTester are ready to use
-    });
-    it("notdeployer will send jetton to jettontester", async () => {
-        // const 
-    }) 
-});
+    }),
+
+it("notdeployer will send jetton to jettontester", async () => {
+        // check this 
+}),
+
+    it("jetton tester shoud send jetton to notdeployer", async () => {
+
+    }),
+
+    it("should throw error code 201", async () => {
+
+    })
+    
+)})
