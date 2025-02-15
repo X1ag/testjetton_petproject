@@ -27,7 +27,7 @@
 								.end_cell();
 	var msg = begin_cell()
 						.store_uint(0x10, 6)
-						.store_slice(calc_user_wallet(my_address(), jetton_minter_address, jetton_wallet_code));; WHY THIS FUNC CALC ADDRESS WRONG? WTF I HAVE NO GUESSES
+						.store_slice(calc_user_wallet(my_address(), jetton_minter_address, jetton_wallet_code))
 						.store_coins(((ONE_TON) / 10))
 						.store_only_body_ref(msg_body)
 	.end_cell();

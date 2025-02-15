@@ -4,7 +4,7 @@ import { JettonWallet } from '../wrappers/JettonWallet';
 import { JettonMinter } from '../wrappers/JettonMinter';
 import '@ton-community/test-utils';
 import { compile } from '@ton/blueprint';
-import { randomAddress, getRandomTon } from './utils';
+import { randomAddress, getRandomTon } from '../tests/utils';
 
 /*
    These tests check compliance with the TEP-74 and TEP-89,
